@@ -8,21 +8,21 @@
 
 ## 1. Introduction
 
-College canteens are busiest during short breaks, especially at lunch time. Students often spend a large part of their break standing in a queue, while canteen staff have to take orders manually and manage several customers at once. An online food-ordering system can make this process faster, clearer and more convenient for everyone.
+As there are a large number of people in the canteen during break times, specifically at lunchtimes, this has caused a large queue for students. Furthermore, staff in the canteen are unable to efficiently take orders from multiple students. In order to improve this situation, an online ordering system can be implemented.
 
-Before choosing how to build the system, it is important to understand the available options:
+There are three options for an application to be developed:
 
-- A **mobile application** is installed on a phone through an app store. It can use phone features such as the camera, GPS and push notifications.
-- A **web application** runs in a browser and is opened through a link. It does not need to be installed and can be used on almost any device.
-- A **Progressive Web Application (PWA)** is a web application with app-like features. It can be added to a phone's home screen, load some content offline and send notifications.
+- **Mobile applications** allow access to features specific to mobile phones such as cameras, location and push notifications. They must be downloaded from an app store.
+- **Web applications** can be accessed by clicking a link in a browser. They do not need to be downloaded and can therefore be accessed by nearly any device.
+- **Progressive web applications (PWAs)** have features similar to mobile applications. These can be saved to your home screen, have partial offline functionality, and have push notifications.
 
 ---
 
 ## 2. Problem Analysis
 
-At present, students have to visit the canteen counter, wait in line, place their order verbally and then wait again for it to be prepared. This manual process can lead to long queues, missed orders and confusion about whether food is ready.
+Currently, students have to collect their food in person. This means that they may be left waiting in long lines. Orders may be missed and students may be unsure if their food is ready.
 
-The college needs a system that allows students to browse the menu, place an order, make an online payment and receive a notification once the food is ready for collection. Since the system may be used by hundreds of students on different phones, it should be simple to access, reliable during peak hours and affordable to develop and maintain.
+To improve this, a system should allow students to search the menu, place an order, pay and be notified when their food is ready. As many students may be using this system (potentially hundreds), and on different phones, the system must be easily accessible, efficient during busy times, and cheap to develop and maintain.
 
 ---
 
@@ -32,70 +32,72 @@ The college needs a system that allows students to browse the menu, place an ord
 
 | Criteria | Native Mobile App | Web App | PWA |
 | --- | --- | --- | --- |
-| Installation | Downloaded from an app store | No installation required | Optional: add to home screen |
-| Codebase | Usually separate for Android and iOS | One codebase | One codebase |
-| Development cost | High | Low | Low |
-| Push notifications | Yes | Limited | Yes |
-| Offline support | Yes | No | Partial, such as a cached menu |
-| Updates | User may need to update the app | Available instantly | Available instantly |
-| Device features | Full access | Limited access | Moderate access |
+| Installation | Must be downloaded from the app store | Not required | Can optionally be added to home screen |
+| Code base | Separate code for Android and iOS | One code base | One code base |
+| Offline functionality | Fully functional | Not available | Partially functional (cached menu) |
+| Updates | May require updates to the application | Instant updates | Instant updates |
 
 ### 3.2 Selected Approach: Progressive Web Application
 
-A Progressive Web Application is the best option for this canteen system because it provides a practical balance between convenience, cost and useful mobile features.
+A Progressive Web Application is the best option for the canteen ordering system. Firstly, only one code base is needed, meaning that students with Android phones and iPhones can use it, and staff in the canteen with computers can use it.
 
-First, a single codebase can be used by students on Android and iPhone devices, as well as by canteen staff using a computer. This reduces both development time and future maintenance costs. Students also do not have to visit an app store or use storage space on their phone; they can simply open a link and begin ordering.
+As it is a Progressive Web Application, students don't have to download the application nor take up any storage space on their phone. They can simply click on the link and start placing orders. Users will also be sent push notifications to let them know when their food is ready. If the menu needs to be updated, prices changed or bugs fixed, this can be done instantly. The menu can be cached, meaning that it loads quickly and can still partially function when the internet within the campus is poor.
 
-The PWA can send push notifications to let students know when their food is ready. Menu updates, price changes and bug fixes can be published immediately without waiting for app-store approval. It can also cache the menu so that it opens faster and remains partly usable when the campus internet connection is weak.
-
-A native app would provide more device access, but that is unnecessary for a food-ordering system and would be more expensive to build for both Android and iOS. A normal web app would be easy to create, but it would not offer the same app-like experience or dependable notification support as a PWA.
+Although a native application would give more device functionality, this is not necessary for the purpose of placing food orders. It would also be more expensive to develop for Android and iOS. A standard web application could be easily developed, however it would not provide the same features as the PWA. For example, notifications would be less reliable.
 
 ### 3.3 Major Functionalities
 
-1. **Menu browsing:** Students can view food items, prices, categories and availability. Search and filters help them find an item quickly.
-2. **Order placement:** Students can add items to a cart, select a pickup time and confirm their order.
-3. **Online payment:** Payments can be made through UPI, cards or wallets, followed by a digital receipt.
-4. **Order-status notifications:** Canteen staff update the order status from a dashboard, and students receive a notification when their order is ready.
+1. **Menu:** Display foods, prices, categories and availability.
+2. **Ordering:** Items can be added to the basket, a pick-up time selected and the order confirmed.
+3. **Payment:** Payment can be made via UPI, cards or wallets. A digital receipt is generated.
+4. **Order status:** Order status can be edited in a dashboard by canteen staff. Students will be notified when their order is ready.
 
 ### 3.4 Application Workflow
 
 ```mermaid
 flowchart TD
-    A[Student opens the PWA] --> B[Login or Register]
-    B --> C[Browse Menu]
-    C --> D[Add Items to Cart]
-    D --> E[Place Order]
-    E --> F[Make Online Payment]
+    subgraph stu [Student]
+        A([Open PWA link]) --> B[Login or Register]
+        B --> C[Browse menu]
+        C --> D[Add items to basket]
+        D --> E[Select pick-up time]
+        E --> F[Place order and pay]
+    end
+
     F --> G{Payment successful?}
-    G -- No --> E
-    G -- Yes --> H[Order appears on canteen dashboard]
-    H --> I[Staff prepares the order]
-    I --> J[Staff marks order as ready]
-    J --> K[Student receives push notification]
-    K --> L[Student collects food]
+    G -- No --> F
+    G -- Yes --> H[Digital receipt generated]
+    H --> I[Order sent to canteen dashboard]
+
+    subgraph staff [Canteen Staff]
+        I --> J[Staff prepares the order]
+        J --> K[Staff marks order as Ready]
+    end
+
+    K --> L[Push notification sent to student]
+    L --> M([Student collects food])
 ```
 
 ---
 
 ## 4. Benefits and Challenges
 
-### Expected Benefits
+### Benefits
 
-- Students spend less time waiting in queues and can collect food when it is ready.
-- Digital orders reduce misunderstandings and mistakes when recording items.
-- Canteen staff can view incoming orders in real time and plan preparation more efficiently.
-- The college gains useful information about popular food items and busy ordering periods.
+- **For users:** Less time spent queuing. Food can be collected when it is ready.
+- **For canteen staff:** Orders can be seen coming in real time, meaning they can prepare orders more efficiently.
+- **For the college:** Useful data can be gained on popular foods and busy ordering times.
 
 ### Development Challenges
 
-1. **Payment integration and security:** The system must connect safely to a payment gateway and protect personal and payment information. HTTPS, secure authentication and tokenised payments are important.
-2. **Peak-hour demand:** Many students may place orders at the same time during lunch breaks. The backend must be able to handle this traffic without becoming slow or unavailable.
-3. **Device and notification compatibility:** The PWA must work well across different browsers and screen sizes. Push-notification support can vary, particularly on iPhones, where users may need to add the PWA to their home screen first.
+1. **Security and payment integration:** Payments must be securely integrated with a payment gateway. Data about users and payments must be kept secure.
+2. **Handling high volumes of requests:** During lunch times, a large number of students may be ordering, so the backend must be able to handle this without lagging or becoming inaccessible.
+3. **Compatibility with devices and notifications:** The PWA must be compatible with different browsers and screen sizes. Support for push notifications may vary depending on the device. On iPhones, users may need to save the PWA to their home screen in order for push notifications to work.
 
 ---
 
 ## 5. Conclusion
 
-An online canteen food-ordering system can reduce queues, minimise manual-order errors and give students a more convenient way to buy food. Among the available approaches, a Progressive Web Application is the most suitable choice because it is easy to access, cost-effective to maintain and still offers useful features such as notifications and limited offline access.
+Overall, implementing an online food ordering system within the canteen can help reduce queues, reduce errors in order taking, and provide a more convenient way for students to order food.
 
-With secure payment handling and a backend designed for busy lunch periods, the system can improve the daily experience for both students and canteen staff.
+From these options, it is most appropriate to implement a Progressive Web Application as it is easily accessible, cheap to maintain and provides useful features such as notifications and partial offline functionality. Secure payment methods and a backend that can handle busy lunch times mean that this system can improve the experience for students and canteen staff.
